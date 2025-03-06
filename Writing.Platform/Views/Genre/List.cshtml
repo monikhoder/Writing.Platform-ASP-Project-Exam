@@ -13,3 +13,43 @@
     </div>
 </div>
 
+<div class="container py-1">
+    @{
+        int i = 0;
+    }
+    @if (Model != null && Model.Any())
+    {
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var genre in Model)
+                {
+                    i++;
+                    <tr>
+                        <td>@i</td>
+                        <td>@genre.Name</td>
+                        <td>@genre.Description</td>
+                        <td>
+                            <a class="btn btn-dark btn-sm" asp-area="" asp-controller="Genre" asp-action="Edit" asp-route-id="@genre.Id">Edit</a>
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    }
+    else
+    {
+        <p class="text-danger">No Genre Found</p>
+    }
+</div>
