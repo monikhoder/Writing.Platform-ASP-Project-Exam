@@ -1,0 +1,94 @@
+﻿@model Writing.Platform.Models.ViewModel.AddBlogPostRequest
+@{
+}
+<div class="container bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>New Post</h1>
+    </div>
+</div>
+<div class="container py-1">
+   <form method="post">
+       <div class="mb-3">
+           <label class="form-label">Title</label>
+            <input type="text" class="form-control" id="Title" asp-for="Title" required />
+       </div>
+        <div class="mb-3">
+            <label class="form-label">Feature Image Upload</label>
+            <input type="file" class="form-control mb-2" id="featureImgaeUpload" required />
+            <img src="" class="mb-2" id="FeatureImageDisplay" style="display:none; width:150px" />
+            <input class="form-control" style="display:none" id="featureImgaeUrl" asp-for="FeatureImageUrl" readonly />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Content</label>
+            <textarea type="text" class="form-control" id="content" asp-for="Content" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">UrlHandle</label>
+            <input type="text" class="form-control" id="urlHandle" asp-for="UrlHandle" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Published Date</label>
+            <input type="date" class="form-control" id="publishedDate" asp-for="PublishDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Author</label>
+            <input type="text" class="form-control" id="author" asp-for="Author" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Genres</label>
+            <select class="form-select" asp-items="@Model.Genres" asp-for="selectedGenres"></select>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="isPublished" asp-for="IsPublished">
+            <label class="form-check-label" for="isPublished">
+                IsPublished
+            </label>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark btn-sm">Post</button>
+
+        </div>
+   </form>
+
+</div>
+
+@section Scripts{
+    <script>
+        var editor = editor = new FroalaEditor('#content', {
+            imageUploadURL: '/api/Image'
+        })
+        const featureImgaeUpload = document.getElementById('featureImgaeUpload');
+        const featureImgaeUrl = document.getElementById('featureImgaeUrl');
+        const FeatureImageDisplay = document.getElementById('FeatureImageDisplay');
+        featureImgaeUpload.addEventListener('change', ImgaeUpload)
+
+
+
+
+        async  function ImgaeUpload(e)
+        {
+            FeatureImageDisplay.style.display = 'none';
+            featureImgaeUrl.style.display = 'none';
+            let data = new FormData();
+            data.append('file', e.target.files[0]);
+            await fetch('/api/Image', {
+                method: 'POST',
+                headers: {
+                    'Accept': '*/*'
+                },
+                body: data
+            })
+            .then(response => response.json())
+            .then(result => {
+                featureImgaeUrl.value = result.link;
+                FeatureImageDisplay.src = result.link;
+                featureImgaeUrl.style.display = 'block';
+                FeatureImageDisplay.style.display = 'block';
+            })
+        };
+
+
+    </script>
+
+}

@@ -1,0 +1,84 @@
+﻿@model List<Writing.Platform.Models.Domain.BlogPost>
+@{
+}
+<div class="container">
+    <div class="row d-flex align-items-center">
+        <div class="col">
+            <h1 class="m-0">List of Post</h1>
+        </div>
+        <div class="col-auto ml-auto">
+            <a class="btn btn-dark btn-sm" asp-controller="Post" asp-action="Add">New Post</a>
+        </div>
+    </div>
+</div>
+<div class="container py-1">
+    @if(Model != null && Model.Any()){
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Title</th>
+                <th>Publish Date</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+            }
+            @foreach (var post in Model)
+            {
+                i++;
+                <tr>
+                    <td>@i</td>
+                    <td>@post.Title</td>
+                    <td>@post.PublishDate.ToShortDateString()</td>
+                    <td>@post.Author</td>
+                    <td>
+                        <div class="d-flex">
+                            @foreach (var genre in post.Genres)
+                            {
+                                <span class="badge bg-dark m-1">@genre.Name</span>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        @if (post.IsPublished)
+                        {
+                            <span class="badge bg-success">Published</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning">Draft</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-area="" asp-controller="Post" asp-action="Edit" asp-route-Id="@post.Id" class="btn btn-dark btn-sm">Edit</a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+    }else{
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="display-4 text-danger">Oops!</h1>
+                <p class="lead">We couldn't find any Blog Post in database</p>
+                <hr class="my-4">
+                <p>Here are some helpful links instead:</p>
+                <div class="mt-4">
+                    <a href="/" class="btn btn-primary btn-lg">Go to Home</a>
+                    <a class="btn btn-outline-secondary btn-lg" asp-area="" asp-controller="Post" asp-action="Add">Add New Post</a>
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+

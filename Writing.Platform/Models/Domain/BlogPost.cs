@@ -10,7 +10,7 @@
         public DateTime PublishDate { get; set; }
         public string Author { get; set; }
         public bool IsPublished { get; set; }
-        public ICollection<Genre> Gernes { get; set; } = new List<Genre>();
+        public ICollection<Genre> Genres { get; set; } = new List<Genre>();
 
     }
 }

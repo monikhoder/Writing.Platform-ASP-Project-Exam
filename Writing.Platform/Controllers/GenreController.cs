@@ -56,7 +56,7 @@ namespace Writing.Platform.Controllers
                 };
                 return View(editGenreRequest);
             }
-            return View(null);
+            return RedirectToAction("Error");
         }
         [HttpPost]
         [ActionName("Edit")]
@@ -77,7 +77,7 @@ namespace Writing.Platform.Controllers
                 return RedirectToAction("List");
             }
             
-            return View(editGenreRequest);
+            return RedirectToAction("Error");
         }
         [HttpPost]
         public IActionResult Delete(Guid id)
@@ -89,7 +89,14 @@ namespace Writing.Platform.Controllers
                 writingDbContext.SaveChanges();
                 return RedirectToAction("List");
             }
-            return RedirectToAction("List");
+            return RedirectToAction("Error");
+        }
+
+        [HttpGet]
+        [ActionName("Error")]
+        public IActionResult Error()
+        {
+            return View();
         }
     }
 }

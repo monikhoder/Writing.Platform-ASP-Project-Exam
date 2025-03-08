@@ -27,12 +27,12 @@ namespace Writing.Platform.Migrations
                     b.Property<Guid>("BlogPostsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GernesId")
+                    b.Property<Guid>("GenresId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("BlogPostsId", "GernesId");
+                    b.HasKey("BlogPostsId", "GenresId");
 
-                    b.HasIndex("GernesId");
+                    b.HasIndex("GenresId");
 
                     b.ToTable("BlogPostGenre");
                 });
@@ -102,7 +102,7 @@ namespace Writing.Platform.Migrations
 
                     b.HasOne("Writing.Platform.Models.Domain.Genre", null)
                         .WithMany()
-                        .HasForeignKey("GernesId")
+                        .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

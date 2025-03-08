@@ -8,7 +8,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<WritingDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
-
+builder.Services.AddScoped<CloudinaryUpload>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
