@@ -37,6 +37,7 @@ namespace Writing.Platform.Controllers
             var blogpost = new BlogPost
             {
                 Title = addBlogPostRequest.Title,
+                ShortDescription = addBlogPostRequest.ShortDescription,
                 Content = addBlogPostRequest.Content,
                 FeatureImageUrl = addBlogPostRequest.FeatureImageUrl,
                 UrlHandle = addBlogPostRequest.UrlHandle,
@@ -77,6 +78,7 @@ namespace Writing.Platform.Controllers
                 {
                     Id = blogpost.Id,
                     Title = blogpost.Title,
+                    ShortDescription = blogpost.ShortDescription,
                     Content = blogpost.Content,
                     FeatureImageUrl = blogpost.FeatureImageUrl,
                     UrlHandle = blogpost.UrlHandle,
@@ -102,6 +104,7 @@ namespace Writing.Platform.Controllers
             {
                 Id = editBlogPostRequest.Id,
                 Title = editBlogPostRequest.Title,
+                ShortDescription = editBlogPostRequest.ShortDescription,
                 Content = editBlogPostRequest.Content,
                 FeatureImageUrl = editBlogPostRequest.FeatureImageUrl,
                 UrlHandle = editBlogPostRequest.UrlHandle,
@@ -123,6 +126,7 @@ namespace Writing.Platform.Controllers
             if (existingPost != null)
             {
                 existingPost.Title = blogpost.Title;
+                existingPost.ShortDescription = blogpost.ShortDescription;
                 existingPost.Content = blogpost.Content;
                 existingPost.FeatureImageUrl = blogpost.FeatureImageUrl;
                 existingPost.UrlHandle = blogpost.UrlHandle;

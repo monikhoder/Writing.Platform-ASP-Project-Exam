@@ -16,6 +16,10 @@
             <label class="form-label">Title</label>
             <input type="text" class="form-control" id="Title" asp-for="Title" required />
         </div>
+        <div class="mb-3">  
+           <label class="form-label">Short Description</label>  
+           <textarea type="text" class="form-control" id="shortDescription" asp-for="ShortDescription" maxlength="250" required ></textarea>  
+        </div>
         <div class="mb-3">
             <label class="form-label">Feature Image Upload</label>
             <input type="file" class="form-control mb-2" id="featureImgaeUpload"/>

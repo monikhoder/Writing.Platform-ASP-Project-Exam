@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Writing.Platform.Data;
 using Writing.Platform.Models;
 
 namespace Writing.Platform.Controllers;
@@ -7,15 +9,18 @@ namespace Writing.Platform.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly WritingDbContext writingDbContext;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, WritingDbContext writingDbContext)
     {
         _logger = logger;
+        this.writingDbContext = writingDbContext;
     }
 
     public IActionResult Index()
     {
-        return View();
+        var blogPosts = writingDbContext.BlogPosts.Include(blogPost => blogPost.Genres).ToList();
+        return View(blogPosts);
     }
 
     public IActionResult Privacy()
