@@ -19,7 +19,10 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var blogPosts = writingDbContext.BlogPosts.Include(blogPost => blogPost.Genres).ToList();
+        var blogPosts = writingDbContext.BlogPosts
+            .Include(x => x.Genres)
+            .OrderByDescending(x => x.PublishDate)
+            .ToList();
         return View(blogPosts);
     }
 
