@@ -9,10 +9,12 @@ namespace Writing.Platform.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager)
+        public AccountController(UserManager<IdentityUser> userManager,  SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         [HttpGet]
@@ -39,6 +41,44 @@ namespace Writing.Platform.Controllers
                 }
                 
             }
+            return View();
+        }
+        [HttpGet]
+        public IActionResult Login(string returnUrl)
+        {
+            var model = new LoginAccountRequest
+            {
+                ReturnUrl = returnUrl,
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Login(LoginAccountRequest loginAccountRequest)
+        {
+            var sign = signInManager.PasswordSignInAsync(loginAccountRequest.UserName, loginAccountRequest.Password, false, false);
+
+            if(sign != null && sign.Result.Succeeded)
+            {
+                if (!string.IsNullOrWhiteSpace(loginAccountRequest.ReturnUrl))
+                {
+                    return Redirect(loginAccountRequest.ReturnUrl);
+                }
+                return RedirectToAction("Index", "Home");
+                    
+            }
+            return View(loginAccountRequest);
+        }
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
             return View();
         }
     }

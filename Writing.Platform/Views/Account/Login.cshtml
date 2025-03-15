@@ -1,0 +1,22 @@
+﻿@model Writing.Platform.Models.ViewModel.LoginAccountRequest
+@{
+}
+<div class="container">
+
+    <div class="mt-5" style="max-width:400px; margin:auto">
+        <h3>Login</h3>
+        <form method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" asp-for="UserName" required>
+            </div>
+            <div class="mb-3">
+                <label for="Password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="Password" asp-for="Password" required>
+            </div>
+            <button type="submit" class="btn btn-dark w-100">Login</button>
+            <input type="hidden" asp-for="ReturnUrl" />
+        </form>
+    </div>
+
+</div>

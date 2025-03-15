@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signIn
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -17,7 +19,7 @@
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Writing.Platform</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -25,25 +27,48 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Post" asp-action="Add">New Post</a>
-                        </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Search</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Admin
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item text-dark" asp-controller="Genre" asp-action="Add">New Genre</a></li>
-                                <li><a class="dropdown-item text-dark" asp-controller="Genre" asp-action="List">Show All Genres</a></li>
-                                <li><a class="dropdown-item text-dark" asp-controller="Post" asp-action="List">Show All Post</a></li>
-                            </ul>
-                        </li>
+                        @if(signIn.IsSignedIn(User) && User.IsInRole("Author"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Post" asp-action="Add">New Post</a>
+                            </li>
+                            
+                        }
+
+
+                        @if (signIn.IsSignedIn(User) && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item text-dark" asp-controller="Genre" asp-action="Add">New Genre</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-controller="Genre" asp-action="List">Show All Genres</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-controller="Post" asp-action="List">Show All Post</a></li>
+                                </ul>
+                            </li>
+                            
+                        }                       
                     </ul>
-                    <div class="d-flex">
-                        <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+
+                    <div class="d-flex gap-2 align-items-center">
+                        @if (signIn.IsSignedIn(User))
+                        {
+                            <div class="me-3 text-light"> @User?.Identity?.Name</div>
+                            <a class=" btn btn-light btn-sm" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+
+                        }
+                        else
+                        {
+                            <a class=" btn btn-light btn-sm" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            <a class=" btn btn-outline-light btn-sm" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                            
+                        }
                     </div>
                 </div>
             </div>

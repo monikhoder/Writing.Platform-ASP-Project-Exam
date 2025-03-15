@@ -4,9 +4,11 @@ using Writing.Platform.Data;
 using Writing.Platform.Models.ViewModel;
 using Writing.Platform.Models.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Writing.Platform.Controllers
 {
+    [Authorize(Roles = "Author")]
     public class PostController : Controller
     {
         private readonly WritingDbContext writingDbContext;
@@ -15,7 +17,7 @@ namespace Writing.Platform.Controllers
         {
             this.writingDbContext = writingDbContext;
         }
-
+       
         [HttpGet]
         public IActionResult Add()
         {
@@ -30,6 +32,7 @@ namespace Writing.Platform.Controllers
             };
             return View(blogpost);
         }
+      
         [HttpPost]
         [ActionName("Add")]
         public IActionResult Add(AddBlogPostRequest addBlogPostRequest)
@@ -60,12 +63,14 @@ namespace Writing.Platform.Controllers
             writingDbContext.SaveChanges();
             return RedirectToAction("List");
         }
+        
         [HttpGet]
         public IActionResult List()
         {
             var blogposts = writingDbContext.BlogPosts.Include(bp => bp.Genres).ToList();
             return View(blogposts);
         }
+        
         [HttpGet]
         public IActionResult Edit(Guid id)
         {
@@ -97,6 +102,7 @@ namespace Writing.Platform.Controllers
 
             return RedirectToAction("Error");
         }
+        
         [HttpPost]
         public IActionResult Edit(EditBlogPostRequest editBlogPostRequest)
         {
@@ -139,6 +145,7 @@ namespace Writing.Platform.Controllers
             }
             return RedirectToAction("Error");
         }
+       
         [HttpPost]
         public IActionResult Delete(EditBlogPostRequest editBlogPostRequest)
         {

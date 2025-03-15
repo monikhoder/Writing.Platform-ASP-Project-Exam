@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Writing.Platform.Data;
@@ -6,6 +7,7 @@ using Writing.Platform.Models;
 
 namespace Writing.Platform.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -16,7 +18,7 @@ public class HomeController : Controller
         _logger = logger;
         this.writingDbContext = writingDbContext;
     }
-
+    
     public IActionResult Index()
     {
         var blogPosts = writingDbContext.BlogPosts

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Writing.Platform.Data;
 
 namespace Writing.Platform.Controllers
 {
+    [Authorize]
     public class BlogController : Controller
     {
         private readonly WritingDbContext writingDbContext;
@@ -12,6 +14,7 @@ namespace Writing.Platform.Controllers
         {
             this.writingDbContext = writingDbContext;
         }
+       
         [HttpGet]
         public IActionResult Index(string urlHandle)
         {

@@ -2,9 +2,12 @@
 using Writing.Platform.Data;
 using Writing.Platform.Models.ViewModel;
 using Writing.Platform.Models.Domain;
+using Microsoft.AspNetCore.Authorization;
+using CloudinaryDotNet.Actions;
 
 namespace Writing.Platform.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class GenreController : Controller
     {
         private readonly WritingDbContext writingDbContext;
@@ -13,13 +16,12 @@ namespace Writing.Platform.Controllers
            this.writingDbContext = writingDbContext;
         }
 
-
         [HttpGet]
-      
         public IActionResult Add()
         {
             return View();
         }
+
         [HttpPost]
         [ActionName("Add")]
         public IActionResult Add(AddGenreRequest addGenreRequest)
@@ -34,6 +36,7 @@ namespace Writing.Platform.Controllers
             return RedirectToAction("List");
 
         }
+
         [HttpGet]
         [ActionName("List")]
         public IActionResult List()
@@ -58,6 +61,7 @@ namespace Writing.Platform.Controllers
             }
             return RedirectToAction("Error");
         }
+        
         [HttpPost]
         [ActionName("Edit")]
         public IActionResult Edit(EditGenreRequest editGenreRequest)
@@ -79,6 +83,7 @@ namespace Writing.Platform.Controllers
             
             return RedirectToAction("Error");
         }
+
         [HttpPost]
         public IActionResult Delete(Guid id)
         {
