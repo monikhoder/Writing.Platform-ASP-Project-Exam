@@ -2,8 +2,10 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Writing.Platform.Data;
 using Writing.Platform.Models;
+using Writing.Platform.Models.ViewModel;
 
 namespace Writing.Platform.Controllers;
 
@@ -23,9 +25,34 @@ public class HomeController : Controller
     {
         var blogPosts = writingDbContext.BlogPosts
             .Include(x => x.Genres)
+            .Include(g => g.BlogLikes)
             .OrderByDescending(x => x.PublishDate)
             .ToList();
-        return View(blogPosts);
+        var postsWithLike = new List<BlogPostDetails>();
+
+
+        foreach (var blogPost in blogPosts)
+        {
+            var post = new BlogPostDetails
+            {
+                Id = blogPost.Id,
+                Title = blogPost.Title,
+                ShortDescription = blogPost.ShortDescription,
+                Content = blogPost.Content,
+                FeatureImageUrl = blogPost.FeatureImageUrl,
+                UrlHandle = blogPost.UrlHandle,
+                PublishDate = blogPost.PublishDate,
+                Author = blogPost.Author,
+                IsPublished = blogPost.IsPublished,
+                Genres = blogPost.Genres,
+                TotalLikes = blogPost.BlogLikes.Count
+            };
+            postsWithLike.Add(post);
+
+        }
+       
+        
+        return View(postsWithLike);
     }
 
     public IActionResult Privacy()

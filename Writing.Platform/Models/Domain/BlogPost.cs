@@ -12,6 +12,7 @@
         public string Author { get; set; }
         public bool IsPublished { get; set; }
         public ICollection<Genre> Genres { get; set; } = new List<Genre>();
+        public ICollection<BlogLike> BlogLikes { get; set; } = new List<BlogLike>();
 
     }
 }

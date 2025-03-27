@@ -1,4 +1,6 @@
-﻿@model List<Writing.Platform.Models.Domain.BlogPost>
+﻿@using Microsoft.AspNetCore.Identity
+@model List<Writing.Platform.Models.ViewModel.BlogPostDetails>
+@inject UserManager<IdentityUser> userManager
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -6,7 +8,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-12">
-            @if(Model != null && Model.Any())
+            @if (Model != null && Model.Any())
             {
                 @foreach (var post in Model)
                 {
@@ -27,8 +29,17 @@
                                 </a>
                                 <p class="" style="font-size:0.9rem">@post.ShortDescription</p>
                                 <div class="d-flex gap-2 align-items-center">
-                                    <span class="text-secondary" style="font-size:0.9rem">👀 11.9K</span>
-                                    <span class="text-secondary" style="font-size:0.9rem">💬 132</span>
+                                    <a id="BtnLike" style="cursor:pointer" onclick="AddLikeToBlog('@post.Id')">
+                                        <span><i class="bi bi-heart text-secondary"></i></span>
+                                        @if (post.TotalLikes > 0)
+                                        {
+                                            <span class="text-secondary " style="font-size:0.9rem">@post.TotalLikes</span>
+                                        }
+                                    </a>
+                                    <a>
+                                        <i class="bi bi-chat-right text-secondary"></i>
+                                        <span class="text-secondary" style="font-size:0.9rem">132</span>
+                                    </a>
                                     @foreach (var genre in post.Genres)
                                     {
                                         <span class="text-secondary" style="font-size:0.9rem">@genre.Name</span>
@@ -37,16 +48,16 @@
                             </div>
                             <img src="@post.FeatureImageUrl" class="img-fluid rounded object-fit-cover" style="width:120px" alt="poster">
                         </div>
-                        
-                    }  
-                    
+
+                    }
+
                 }
-                
-                
+
+
             }
-            
-              
-     
+
+
+
         </div>
         <div class="col-md-4 col-12">
             <div class="accordion" id="accordionExample">
@@ -91,3 +102,27 @@
         </div>
     </div>
 </div>
+
+
+
+@section scripts {
+    <script>
+        async function AddLikeToBlog(postid){
+            fetch('/api/BlogLike/Add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'Application/json',
+                    'Accept': '*/*'
+                },
+                body: JSON.stringify(
+                    {
+                        BlogPostId: postid,
+                        UserId: '@userManager.GetUserId(User)'
+                    }
+                )
+            }).then(console.log('ok'));
+        };
+
+    </script>
+
+}

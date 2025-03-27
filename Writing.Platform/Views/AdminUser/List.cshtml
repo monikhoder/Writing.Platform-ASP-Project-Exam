@@ -1,0 +1,122 @@
+﻿@model Writing.Platform.Models.ViewModel.UserViewModel
+@{
+}
+<div class="container">
+    <div class="row d-flex align-items-center">
+        <div class="col">
+            <h1 class="m-0">List of Users</h1>
+        </div>
+        <div class="col-auto ml-auto">
+            <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newUser">
+                New User
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container py-1">
+    @{
+        int i = 0;
+    }
+    @if (Model != null)
+    {
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    i++;
+                    <tr>
+                        <td>@i</td>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>
+                            <form method="post" asp-controller="AdminUser" asp-action="Delete" asp-route-id="@user.Id">
+                                <button type="submit" class="btn btn-danger btn-sm" >Delete</button>
+                            </form>
+                            
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    }
+    else
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="display-4 text-danger">Oops!</h1>
+                <p class="lead">We couldn't find any User in database</p>
+                <hr class="my-4">
+                <p>Here are some helpful links instead:</p>
+                <div class="mt-4">
+                    <a href="/" class="btn btn-primary btn-lg">Go to Home</a>
+                    <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newUser">
+                        New User
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<!-- Modal -->
+<form method="post">
+<div class="modal fade " id="newUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" asp-for="Username" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="text" class="form-control" asp-for="Email" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" asp-for="Password" required />
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="User" id="checkUser" checked disabled>
+                    <label class="form-check-label" for="checkUser">User Role</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox"  id="checkAuthor" asp-for="AuthorRole">
+                    <label class="form-check-label" for="checkAuthor">Author Role</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="checkAdmin" asp-for="AdminRole">
+                    <label class="form-check-label" for="checkAdmin">Admin Role</label>
+                    
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-dark">Save Change</button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

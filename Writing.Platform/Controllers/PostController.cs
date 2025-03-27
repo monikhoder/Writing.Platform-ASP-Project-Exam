@@ -17,25 +17,25 @@ namespace Writing.Platform.Controllers
         {
             this.writingDbContext = writingDbContext;
         }
-       
+
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            var genres = writingDbContext.Genres.ToList();
+            var genres = await writingDbContext.Genres.ToListAsync();
             var blogpost = new AddBlogPostRequest
             {
-               Genres = genres.Select(genre => new SelectListItem
-               {
-                   Text = genre.Name,
-                   Value = genre.Id.ToString()
-               })
+                Genres = genres.Select(genre => new SelectListItem
+                {
+                    Text = genre.Name,
+                    Value = genre.Id.ToString()
+                })
             };
             return View(blogpost);
         }
-      
+
         [HttpPost]
         [ActionName("Add")]
-        public IActionResult Add(AddBlogPostRequest addBlogPostRequest)
+        public async Task<IActionResult> Add(AddBlogPostRequest addBlogPostRequest)
         {
             var blogpost = new BlogPost
             {
@@ -48,34 +48,39 @@ namespace Writing.Platform.Controllers
                 Author = addBlogPostRequest.Author,
                 IsPublished = addBlogPostRequest.IsPublished
             };
+
             var selectedGenre = new List<Genre>();
-            foreach(var genre in addBlogPostRequest.selectedGenres)
+            foreach (var genre in addBlogPostRequest.selectedGenres)
             {
                 var genreId = Guid.Parse(genre);
-                var genreEntity = writingDbContext.Genres.FirstOrDefault(genre => genre.Id == genreId);
-                if(genreEntity != null)
+                var genreEntity = await writingDbContext.Genres.FirstOrDefaultAsync(g => g.Id == genreId);
+                if (genreEntity != null)
                 {
                     selectedGenre.Add(genreEntity);
                 }
             }
+
             blogpost.Genres = selectedGenre;
-            writingDbContext.BlogPosts.Add(blogpost);
-            writingDbContext.SaveChanges();
+            await writingDbContext.BlogPosts.AddAsync(blogpost);
+            await writingDbContext.SaveChangesAsync();
             return RedirectToAction("List");
         }
-        
+
         [HttpGet]
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
-            var blogposts = writingDbContext.BlogPosts.Include(bp => bp.Genres).ToList();
+            var blogposts = await writingDbContext.BlogPosts.Include(bp => bp.Genres).ToListAsync();
             return View(blogposts);
         }
-        
+
         [HttpGet]
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            var blogpost = writingDbContext.BlogPosts.Include(bp => bp.Genres).FirstOrDefault(bp => bp.Id == id);
-            var genres = writingDbContext.Genres.ToList();
+            var blogpost = await writingDbContext.BlogPosts
+                .Include(bp => bp.Genres)
+                .FirstOrDefaultAsync(bp => bp.Id == id);
+
+            var genres = await writingDbContext.Genres.ToListAsync();
 
             if (blogpost != null)
             {
@@ -102,9 +107,9 @@ namespace Writing.Platform.Controllers
 
             return RedirectToAction("Error");
         }
-        
+
         [HttpPost]
-        public IActionResult Edit(EditBlogPostRequest editBlogPostRequest)
+        public async Task<IActionResult> Edit(EditBlogPostRequest editBlogPostRequest)
         {
             var blogpost = new BlogPost
             {
@@ -118,17 +123,22 @@ namespace Writing.Platform.Controllers
                 Author = editBlogPostRequest.Author,
                 IsPublished = editBlogPostRequest.IsPublished
             };
+
             var selectedGenre = new List<Genre>();
             foreach (var genre in editBlogPostRequest.selectedGenres)
             {
                 var genreId = Guid.Parse(genre);
-                var genreEntity = writingDbContext.Genres.FirstOrDefault(genre => genre.Id == genreId);
+                var genreEntity = await writingDbContext.Genres.FirstOrDefaultAsync(g => g.Id == genreId);
                 if (genreEntity != null)
                 {
                     selectedGenre.Add(genreEntity);
                 }
             }
-            var existingPost = writingDbContext.BlogPosts.Include(bp => bp.Genres).FirstOrDefault(bp => bp.Id == blogpost.Id);
+
+            var existingPost = await writingDbContext.BlogPosts
+                .Include(bp => bp.Genres)
+                .FirstOrDefaultAsync(bp => bp.Id == blogpost.Id);
+
             if (existingPost != null)
             {
                 existingPost.Title = blogpost.Title;
@@ -140,30 +150,32 @@ namespace Writing.Platform.Controllers
                 existingPost.Author = blogpost.Author;
                 existingPost.IsPublished = blogpost.IsPublished;
                 existingPost.Genres = selectedGenre;
-                writingDbContext.SaveChanges();
+                await writingDbContext.SaveChangesAsync();
                 return RedirectToAction("List");
             }
             return RedirectToAction("Error");
         }
-       
+
         [HttpPost]
-        public IActionResult Delete(EditBlogPostRequest editBlogPostRequest)
+        public async Task<IActionResult> Delete(EditBlogPostRequest editBlogPostRequest)
         {
-            var blogpost = writingDbContext.BlogPosts.FirstOrDefault(bp => bp.Id == editBlogPostRequest.Id);
+            var blogpost = await writingDbContext.BlogPosts
+                .FirstOrDefaultAsync(bp => bp.Id == editBlogPostRequest.Id);
+
             if (blogpost != null)
             {
                 writingDbContext.BlogPosts.Remove(blogpost);
-                writingDbContext.SaveChanges();
+                await writingDbContext.SaveChangesAsync();
                 return RedirectToAction("List");
             }
             return RedirectToAction("Error");
         }
+
         [HttpGet]
         [ActionName("Error")]
         public IActionResult Error()
         {
             return View();
         }
-
     }
 }

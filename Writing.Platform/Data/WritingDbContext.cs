@@ -9,5 +9,6 @@ namespace Writing.Platform.Data
         }
         public DbSet<Writing.Platform.Models.Domain.BlogPost> BlogPosts { get; set; }
         public DbSet<Writing.Platform.Models.Domain.Genre> Genres { get; set; }
+        public DbSet<Writing.Platform.Models.Domain.BlogLike> blogLikes { get; set; }
     }
 }
